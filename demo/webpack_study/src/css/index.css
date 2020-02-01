@@ -1,0 +1,11 @@
+li {
+  list-style-type: none;
+}
+
+#box {
+  width: 200px;
+  height: 200px;
+  border: 1px solid #000;
+  background-image: url(../images/a03.jpg);
+  background-size: cover;
+}

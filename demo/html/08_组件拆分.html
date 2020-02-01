@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>08 组件拆分</title>
+  <script src="../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <div>
+      <input type="text" v-model="inputValue" ref="Input" />
+      <button @click="submit">提交</button>
+    </div>
+    <ul>
+      <todo-item v-for="(item,index) in lists" :key="index" :content="item">
+      </todo-item>
+    </ul>
+  </div>
+
+  <script>
+    // 定义全局组件
+    Vue.component('todo-item', {
+      // 接收外部content属性值
+      props: ['content'],
+      // 组件中根标签只能有一个
+      template: '<div>  <li>{{content}} -- {{msg}}</li> <button @click="add()">点击加一</button> <h3>{{count}}</h3> </div>',
+
+      // 组件中的data是一个方法，方法内部必须返回一个对象，而实例中的data是一个对象
+      // 组件中的data和实例中的data使用方式一样
+      data: function () {  // data() {
+        return {
+          msg: '这是组件中的data定义的数据',
+          count: 0
+        }
+      },
+
+      // 组件中也可以有methods来定义方法，使用方式和实例中的methods一样
+      methods: {
+        add() {
+          this.count++;
+        }
+      }
+    })
+
+    // 定义子组件
+    // var ToDoItem = {
+    //     template: '<li>item</li>'
+    // }
+
+    new Vue({
+      el: "#app",
+      data: {
+        // 子组件的声明
+        // components: {
+        //     'todo-item': ToDoItem
+        // },
+
+        inputValue: '',
+        lists: []
+      },
+      methods: {
+        submit: function () {
+          this.lists.push(this.inputValue);
+          this.inputValue = '';
+          this.$refs.Input.focus();
+          // console.log(this.$refs.Input);
+        }
+      }
+    })
+
+  </script>
+
+</body>
+
+</html>

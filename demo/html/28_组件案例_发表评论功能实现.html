@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>28 评论功能</title>
+  <link rel="stylesheet" href="../css/bootstrap.css">
+  <script src="../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+
+    <cmt-box @func="loadComments"></cmt-box>
+
+    <ul class="list-group">
+      <li class="list-group-item" v-for="item in list" :key="item.id">
+
+        <a href="" class="badge btn btn-danger" @click.prevent="del(item.id)">删除</a>
+
+        <span class="badge">评论人：{{ item.user }}</span>
+
+        {{ item.content }}
+      </li>
+    </ul>
+
+  </div>
+
+
+  <!-- 在 #app 外书写模板的标签结构内容，有智能提示 -->
+  <template id="templ">
+    <div>
+
+      <div class="form-group">
+        <label>评论人：</label>
+        <input type="text" class="form-control" v-model="user">
+      </div>
+
+      <div class="form-group">
+        <label>评论内容：</label>
+        <textarea class="form-control" v-model="content"></textarea>
+      </div>
+
+      <div class="form-group">
+        <input type="button" value="发表评论" class="btn btn-primary" @click="postComment">
+      </div>
+
+    </div>
+  </template>
+
+
+
+
+  <script>
+
+    // 定义一个模板
+    var commentBox = {
+      data() {
+        return {
+          user: '',
+          content: ''
+        }
+      },
+      template: '#templ',
+      methods: {
+        postComment() {
+          var comment = { id: Date.now(), user: this.user, content: this.content }
+
+          // 从 localStorage 中获取所有的评论
+          // 使用 JSON.parse() 方法将数据转换为 JavaScript 对象
+          var list = JSON.parse(localStorage.getItem('cmts') || '[]')
+          list.unshift(comment)
+
+          // 重新保存最新的评论数据：setItem 保存数据语法
+          localStorage.setItem('cmts', JSON.stringify(list))
+
+          // getItem 读取数据
+          // var list2 = localStorage.getItem('cmts', JSON.stringify(list))
+
+
+          this.user = this.content = ''
+
+          this.$emit('func')
+        }
+      }
+    }
+
+
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        list: [
+          { id: Date.now(), user: '李白', content: '青丘之地的灵魂不会永远漂泊，因为我在这里' },
+          { id: Date.now(), user: '鲁班', content: '鲁班大师，智商二百五' },
+          { id: Date.now(), user: '花木兰', content: '麒麟踏祥云，人间百难消' }
+        ]
+      },
+      methods: {
+        loadComments() {  // 从本地的 localStorage 中，加载评论列表
+          var list = JSON.parse(localStorage.getItem('cmts') || '[]')
+          this.list = list
+        },
+
+        del(id) {  // 删除评论
+          // localStorage.removeItem("key") 删除 localStorage 中所有的数据
+          this.list.some((item, index) => {
+            if (item.id == id) {
+              // 删除列表中的 li
+              this.list.splice(index, 1)
+              // 先将 localStorage 中存储数据转化为 JS 数组对象，再对JS对象进行指定删除
+              var list = JSON.parse(localStorage.getItem('cmts') || '[]')
+              list.splice(index, 1)
+
+              // 重新保存数据至 localStorage 中
+              localStorage.setItem('cmts', JSON.stringify(list))
+              return true
+            }
+          })
+        }
+      },
+      // 注册私有组件，名称为 cmt-box
+      components: {
+        'cmt-box': commentBox
+      },
+
+      created() {
+        this.loadComments();
+      }
+    })
+
+  </script>
+</body>
+
+</html>

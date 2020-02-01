@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>09 组件删除</title>
+  <script src="../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <div>
+      <input type="text" v-model="inputValue" />
+      <button @click="submit">提交</button>
+    </div>
+    <ul>
+      <!-- 1、定义属性content、index，用于父组件向子组件传递信息
+           2、@ 表示 v-on ，事件监听：当监听到子组件触发delete后，
+              父组件会执行自己的handleDelete方法
+      -->
+      <todo-item v-for="(item,index) in lists" :key="index" :content="item" :index="index" @delete="handleDelete">
+      </todo-item>
+    </ul>
+  </div>
+
+  <script>
+    // 定义全局组件
+    Vue.component('todo-item', {
+      // 接收外部content、index属性值
+      props: ['content', 'index'],
+      template: '<li @click="handleClick">{{index}}、{{content}}</li>',
+      methods: {
+        handleClick: function () {
+          // $emit 子组件向外界触发delete事件
+          this.$emit('delete', this.index)
+        }
+      }
+    })
+
+    // 定义局部组件
+    // var ToDoItem = {
+    //     template: '<li>item</li>'
+    // }
+
+    new Vue({
+      el: "#app",
+      data: {
+        // 局部组件的声明
+        // components: {
+        //     'todo-item': ToDoItem
+        // },
+
+        inputValue: '',
+        lists: []
+      },
+      methods: {
+        submit: function () {
+          this.lists.push(this.inputValue);
+          this.inputValue = "";
+        },
+        handleDelete: function (index) {
+          console.log(index);
+          // splice()方法：从对应index的位置删除一个
+          this.lists.splice(index, 1)
+        }
+
+      }
+    })
+
+  </script>
+
+</body>
+
+</html>

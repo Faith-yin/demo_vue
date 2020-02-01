@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>31 路由传参</title>
+  <script src="../js/vue.js"></script>
+  <script src="../js/vue-router-3.0.1.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <router-link to="/login?id=10&name=zhangsan">登录</router-link>
+    <router-link to="/register/13/lisi">注册</router-link>
+
+    <router-view></router-view>
+  </div>
+
+
+  <script>
+
+    // 登录组件的传值方式是：query
+    var login = {
+      template: '<h1>登录组件 --- {{ $route.query.id }} --- {{ $route.query.name }}</h1>',
+      data() {
+        return {
+          msg: '12345'
+        }
+      },
+      // 组件的生命周期钩子函数
+      created() {
+        console.log("this.$route.query: ", this.$route.query)
+      }
+    }
+
+    // 注册组件的传值方式是：params
+    var register = {
+      template: '<h1>注册组件 --- {{ $route.params.id }} --- {{ $route.params.name }}</h1>',
+      data() {
+        return {
+          msg: '678910'
+        }
+      },
+      // 组件的生命周期钩子函数
+      created() {
+        console.log("this.$route.params.id: ", this.$route.params.id)
+        console.log("this.$route: ", this.$route);
+        console.log("this.$router: ", this.$router);
+      }
+    }
+
+
+    var router = new VueRouter({
+      routes: [
+        { path: '/login', component: login },
+        { path: '/register/:id/:name', component: register }
+      ]
+    })
+
+
+
+    var vm = new Vue({
+      el: '#app',
+      data: {
+
+      },
+      methods: {
+
+      },
+      // router: router
+      router
+
+    })
+
+
+  </script>
+</body>
+
+</html>

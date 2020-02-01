@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>29 ref</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <input type="button" value="获取元素" @click="getElement">
+    <h3 ref="myh3">纵情山河万里，肆意九州五岳...</h3>
+
+    <hr>
+
+    <login ref="mylogin"></login>
+
+
+  </div>
+
+
+  <script>
+
+    var login = {
+      template: '<h1>登录组件</h1>',
+      data() {
+        return {
+          msg: 'son msg'
+        }
+      },
+      methods: {
+        show() {
+          console.log('调用了子组件的方法')
+        }
+      }
+    }
+
+
+    var vm = new Vue({
+      el: '#app',
+      data: {
+
+      },
+      methods: {
+        getElement() {
+          // console.log(document.getElementById('myh3').innerText)
+
+          // ref 是英文单词【reference】的缩写，引用类型 和 值类型
+          console.log(this.$refs.myh3.innerText)
+
+          // 利用 $ref 调用子组件中的数据
+          console.log(this.$refs.mylogin.msg)
+
+          // 利用 $ref 调用子组件中的方法
+          this.$refs.mylogin.show()
+        }
+      },
+      components: {
+        login
+      }
+    })
+  
+  </script>
+</body>
+</html>

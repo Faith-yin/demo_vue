@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>17 品牌列表</title>
+  <link rel="stylesheet" href="../css/bootstrap.css">
+  <script src="../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+
+
+    <div class="panel-body form-inline">
+      <label>
+        Id:
+        <input type="text" class="form-control" v-model="id">
+      </label>
+
+      <label>
+        Name:
+        <!-- 键盘按键抬起事件 -->
+        <input type="text" class="form-control" v-model="name" @keyup.f2="add" @keyup.enter="add">
+      </label>
+
+      <!-- 在Vue中，使用事件绑定机制，为元素指定处理器函数时，如果加了小括号，就可以给函数传参了 -->
+      <input type="button" value="添加" class="btn btn-primary" @click="add()">
+
+      <label>
+        搜索名称关键字：
+        <!-- 调用全局指令，必须加前缀 v- -->
+        <input type="text" class="form-control" v-model="keywords" v-focus v-color="'blue'">
+      </label>
+    </div>
+
+
+
+    <table class="table table-bordered table-hover table-striped">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Ctime</th>
+          <th>Opearation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 之前，v-for 中的数据，都是直接从 data 上的 list 中直接渲染过来的 -->
+        <!-- 现在，我们自定义了一个 search 方法，同时把所有的关键字，通过传参的形式，传递给了 search 方法 -->
+        <!-- 在 search 方法内部，通过执行 for 循环，把所有符合搜索关键字的数据，保存到一个新的数组中，返回 -->
+        <tr v-for="item in search(keywords)" :key="item.id">
+          <td>{{ item.id }}</td>
+          <td v-text="item.name"></td>
+          <td>{{ item.ctime | dateFormat() }}</td>
+          <td>
+            <a href="" @click.prevent="del(item.id)">删除</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+
+    <h3 v-fontweight="900">Now：{{ ntime | dateFormat }}</h3>
+  </div>
+
+
+
+  <script>
+    // 全局过滤器，进行时间的格式化
+    Vue.filter('dateFormat', function (dateStr, pattern = "") {
+      // 根据给定的时间的字符串，得到特定的时间
+      var dt = new Date(dateStr)
+
+      // yyyy-mm-dd
+      var y = dt.getFullYear()
+      // toString 方法表示转化为字符串
+      // padStart(maxLength, '要添加的字符') 方法表示在原字符串之前添加字符
+      // 同理，padEnd 方法表示在原字符串之后添加字符
+      var m = (dt.getMonth() + 1).toString().padStart(2, '0')
+      var d = dt.getDate().toString().padStart(2, '0')
+
+      // toLowerCase 方法将字符创转化为小写
+      if (pattern.toLowerCase() === 'yyyy-mm-dd') {
+        return `${y}-${m}-${d}`
+      } else {
+        var hh = dt.getHours().toString().padStart(2, '0')
+        var mm = dt.getMinutes().toString().padStart(2, '0')
+        var ss = dt.getSeconds().toString().padStart(2, '0')
+
+        // return y + '-' + m + '-' + d
+        return `${y}-${m}-${d} ${hh}:${mm}:${ss}`
+      }
+    })
+
+
+    // 自定义全局按键修饰符
+    Vue.config.keyCodes.f2 = 113
+
+
+    // 定义 获取焦点 的全局指令
+    Vue.directive('focus', {
+      bind: function (el) {
+
+      },
+      inserted: function (el) {
+        // 和JS行为有关的操作，最好在 inserted 中去执行
+        el.focus()
+      },
+      updated: function (el) { }
+    })
+
+
+    // 定义一个 改变字体颜色 的全局指令
+    Vue.directive('color', {
+      // binding 是作为传值的形参
+      bind: function (el, binding) {
+
+        // console.log(binding.value)
+        // console.log(binding.expression)
+
+        // 和样式相关的操作，一般都在 bind 中执行
+        el.style.color = binding.value
+      }
+    })
+
+
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        id: '',
+        name: '',
+        keywords: '',
+        ntime: new Date(),
+        list: [
+          { id: 1, name: '奔驰', ctime: new Date() },
+          { id: 2, name: '宝马', ctime: new Date() }
+        ]
+      },
+      methods: {
+        add() { //添加的方法 
+          var car = { id: this.id, name: this.name, ctime: new Date() }
+          this.list.push(car)
+          // = 运算符从右边往左边计算
+          // 先把空值赋给name，再把name里的空值赋给id
+          this.id = this.name = ''
+        },
+        del(id) { // 根据Id删除数据
+
+          // some 方法用于依次检测数组中的每一个元素是否满足指定条件
+          // 若有一个元素满足条件，则返回true，终止循环，剩下的元素不会再执行检测
+          // 若没有满足条件的元素，则返回false
+          this.list.some((item, index) => {
+            if (item.id == id) {
+              this.list.splice(index, 1)
+              return true;
+            }
+          })
+
+
+          // var index = this.list.findIndex(item => {
+          //     if(item.id = id) {
+          //         return true;
+          //     }
+          // })
+          // this.list.splice(index, 1)
+        },
+        search(keywords) { // 根据关键字，进行的搜索
+          // var newList = []
+          // this.list.forEach(item => {
+          //     if(item.name.indexOf(keywords) != -1) {
+          //         newList.push(item)
+          //     }
+          // })
+          // return newList
+
+          // *** forEach some filter findIndex 这些都属于数组的新方法，
+          // 都会对数组的每一项进行遍历，执行相关的操作
+          return this.list.filter(item => {
+            // *** String.prototype.includes('要包含的字符串')
+            // 如果包含，则返回 true，否则返回 false
+            if (item.name.includes(keywords)) {
+              return item
+            }
+          })
+        }
+      },
+      directives: { // 自定义 字体加粗 的私有指令
+        'fontweight': {
+          bind: function (el, binding) {
+            el.style.fontWeight = binding.value
+          }
+        }
+      }
+    })
+
+
+  </script>
+
+</body>
+
+</html>

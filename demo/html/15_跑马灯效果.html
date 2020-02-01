@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>15 跑马灯效果</title>
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <button @click="btnstart">开始</button>
+        <button @click="btnstop">结束</button>
+        <p>{{ msg }}</p>
+    </div>
+
+
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                msg: '我是一只小画家，在学Vue。。。',
+                // 在data上定义计时器Id，使之初始值为空
+                intervalId: null
+            },
+            methods: {
+
+                // 此函数第一种写法------------>
+                // btnstart() {
+                //     var _this = this
+                //     setInterval(function() {
+                //         var start = _this.msg.substring(0,1)
+                //         var end = _this.msg.substring(1)
+                //         _this.msg = end + start
+                //     },400)
+                // },
+
+
+                // 第二种写法------------>
+
+                // 下面可简写成：btn-start() {  }
+                btnstart: function() {
+
+                    // 判断如果计时器不为空(已经开启了一个计时器)，则直接返回出去
+                    if(this.intervalId != null)return
+
+                    // 定义计时器，每隔400ms执行一次
+                    // 箭头函数 => 作用：里面的this同外面的this指向相同
+                    this.intervalId = setInterval( () => {
+                        var start = this.msg.substring(0,1)
+                        var end = this.msg.substring(1)
+                        this.msg = end + start
+                    },400)
+
+                },
+
+                btnstop() {
+                    clearInterval(this.intervalId)
+                    // 每当清除计时器后，将Id归为空，以便再次开启计时器
+                    this.intervalId = null
+                }
+            }
+        })
+    
+    </script>
+    
+</body>
+</html>

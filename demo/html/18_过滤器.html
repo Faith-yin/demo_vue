@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>18 过滤器</title>
+  <script src="../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- 此 app 下的 vm 无私有过滤器，所以调用全局过滤器 -->
+    <p>{{ msg | msgFormat('疯狂','creazy') }}</p>
+  </div>
+
+  <div id="app2">
+    <!-- 此 app2 下的 vm2 下有私有过滤器，所以调用私有过滤器 -->
+    <p>{{ msg | msgFormat('天真', 'naive') }}</p>
+  </div>
+
+
+  <script>
+    // 定义 全局 过滤器，名字叫做 msgFormat
+    Vue.filter('msgFormat', function (msg, arg, arg2) {
+      // 字符串的 replace 方法，第一个参数，除了可写一个字符串外，还可以定义一个正则，
+      // /需要被替换的字符串/g  表示全局替换
+      return msg.replace(/单纯/g, arg + arg2)
+    })
+
+
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        msg: '曾经，我也是一个单纯的少年，单纯的我，曾经傻傻的问，谁是这个世界上最单纯的人儿。'
+      },
+      methods: {}
+    })
+
+
+
+    var vm2 = new Vue({
+      el: '#app2',
+      data: {
+        msg: '曾经，我也是一个单纯的少年，单纯的我，曾经傻傻的问，谁是这个世界上最单纯的人儿。'
+      },
+      methods: {},
+      // 定义 私有 过滤器
+      // 过滤器调用的时候，采用的是就是就近原则，如果私有过滤器和全局过滤器名称一致，优先调用私有过滤器
+      filters: {
+        msgFormat: function (msg, arg, arg2) {
+          return msg.replace('单纯', arg + arg2)
+        }
+      }
+    })
+
+  </script>
+</body>
+
+</html>

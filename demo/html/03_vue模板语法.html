@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>03 vue示例</title>
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div class="bg" v-bind = "bg1">
+            hello world!
+            {{msg}}
+        </div>
+        <div class="bg">
+            {{msg}}
+        </div>
+        <div v-html = "template"></div>
+        {{count}}
+        {{ (count + 1) * 10 }}
+        <a v-bind:href = "url">百度一下</a>
+        <!-- v-on: 和 @ 用于事件绑定 -->
+        <button v-on:click = "submit">点击计数</button>
+    </div>
+
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                bg1: 'app-bind',
+                msg: 'hello vue!',
+                count: 0,
+                url: 'http://www.baidu.com',
+                template: '<div>hello template!</div>'
+            },
+            methods: {
+                submit: function() {
+                    this.count ++
+                }
+            }
+        })
+    
+    
+    
+    </script>
+    
+</body>
+</html>

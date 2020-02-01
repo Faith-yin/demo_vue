@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>04 计算属性与侦听器</title>
+  <script src="../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    {{msg}}
+    <p>
+      {{msg1}}
+    </p>
+
+    <input type="text" v-model="firstname"> +
+    <input type="text" v-model="lastname"> =
+    <input type="text" v-model="fullname">
+
+  </div>
+
+
+  <script>
+    var arr = 'test';
+    var app = new Vue({
+      el: '#app',
+      data: {
+        msg: 'Hello Vue!',
+        another: 'another Hello Vue!',
+        firstname: '',
+        lastname: '',
+        fullname: ''
+      },
+      // 侦听器：一般用于监控路由、input输入框的值特殊处理等等
+      // 使用这个属性，可以监听 data 中指定数据的变化，然后触发这个 watch 中对应的 function 处理函数
+      // watch 监听路由地址的变化，详见 30
+      watch: {
+        // 监听 msg 数据的变化，若变化，则执行此函数
+        msg: function (newval, oldval) {
+          console.log('newval is:' + newval);
+          console.log('oldval is:' + oldval);
+        },
+
+        // 监听 firstname 数据的变化，若变化，则执行此函数
+        'firstname': function (newVal, oldVal) {
+          console.log('firstname中的变化' + newVal + '---' + oldVal)
+          this.fullname = newVal + '-' + this.lastname
+        },
+        // 监听 lastname 数据的变化，若变化，则执行此函数
+        'lastname': function (newVal, oldVal) {
+          console.log('lastname中的变化' + newVal + '---' + oldVal)
+          this.fullname = this.firstname + '-' + newVal
+        }
+      },
+
+
+      // 计算属性
+      // msg1 不可在 data 中定义，因为对应的computed作为计算属性定义msg1并返回对应的结果给这个变量,变量不可被重复定义和赋值
+      // 只要计算属性这个 function 内部所用到的任何 data 数据发生了变化，就会立即重新计算这个属性的值
+      computed: {
+        msg1: function () {
+          return 'computed：' + this.msg + ' --- ' + this.another + arr + ' --- ' + this.fullname;
+        }
+      }
+    })
+
+
+
+    // watch、computed 和 methods 之间的对比：
+    
+      // 1.watch 一个对象，键是需要观察的表达式，值是对应回调函数。主要用来监听某些特定数据的变化，
+      //   从而进行某些具体的业务逻辑操作，一般用来监听虚拟数据的变化，如 路由地址 ...
+
+      // 2.computed 属性的结果会被缓存，除非依赖的响应式属性变化才会重新计算，主要当做属性来使用
+      
+      // 3.methods 方法表示一个具体的操作，主要书写业务逻辑
+
+
+  </script>
+</body>
+
+</html>

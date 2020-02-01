@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>22 动画</title>
+    <script src="../js/vue.js"></script>
+    <link rel="stylesheet" href="../css/animate.css">
+
+    <style>
+        /* v-enter【这是一个时间点】是进入之前，元素的起始状态，此时还没有进入 */
+        /* v-leave-to【这是一个时间点】是动画离开之后，离开的终止状态，此时元素动画已经结束 */
+        .v-enter,
+        .v-leave-to {
+            opacity: 0;
+            transform: translateX(150px);
+        }
+
+        /* v-enter-active 【入场动画的时间段】 */
+        /* v-leave-active 【离场动画的时间段】 */
+        .v-enter-active,
+        .v-leave-active {
+            transition: all 0.8s ease;
+        }
+
+
+        .my-enter,
+        .my-leave-to {
+            opacity: 0;
+            transform: translateY(150px);
+        }
+
+        .my-enter-active,
+        .my-leave-active {
+            transition: all 0.8s ease;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <input type="button" value="toggle" @click="flag=!flag">
+        <!-- 使用 transition 元素，把 需要被动画控制的元素 包裹起来 -->
+        <!-- name 默认引用 v- 前缀的动画 -->
+        <transition name="" mode="">
+            <h3 v-if="flag">我是h3标签</h3>
+        </transition>
+        <hr>
+
+        <input type="button" value="toggle1" @click="flag1=!flag1">
+        <!-- name 引用自定义 my- 前缀的动画，默认为 v- 前缀 -->
+        <transition name="my" mode="">
+            <h6 v-if="flag1">我是h6标签</h6>
+        </transition>
+        <hr>
+
+
+
+        <!-- 使用第三方animate.css类库实现动画 -->
+        <input type="button" value="toggle2" @click="flag2=!flag2">
+        <!-- 类名可以定义在一起 -->
+        <!-- 使用 duration="毫秒值" 来统一设置 入场 和 离场 动画 -->
+        <transition name="" mode="" 
+            enter-active-class="animated bounceIn" 
+            leave-active-class="animated bounceOut"
+            duration="400" >
+            <h5 v-if="flag2">我是h5标签</h5>
+        </transition>
+        <hr>
+
+        <input type="button" value="toggle3" @click="flag3=!flag3">
+        <!-- 类名分开定义 -->
+        <!-- 使用 duration="毫秒值" 分别来设置 入场 和 离场 动画 -->
+        <transition name="" mode="" 
+            enter-active-class="bounceIn" 
+            leave-active-class="bounceOut"
+            duration="{ enter: 100, leave: 800 }" >
+            <h4 v-if="flag3" class="animated">我是h4标签</h4>
+        </transition>
+        
+
+    </div>
+
+
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                flag: false,
+                flag1: false,
+                flag2: false,
+                flag3: false
+            },
+            methods: { }
+        })
+
+    </script>
+</body>
+
+</html>

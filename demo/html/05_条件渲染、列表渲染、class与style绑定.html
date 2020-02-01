@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>05 条件渲染、列表渲染、class与style绑定</title>
+    <script src="../js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 条件渲染 -->
+        <div v-if="count > 0">
+            判断1：count大于0，count的值是：{{count}}
+        </div>
+        <div v-else-if="count < 0 && count > -5">
+            判断2：count的值是：{{count}}
+        </div>
+        <div v-else>
+            判断3：count的值是：{{count}}
+        </div>
+    </div>
+
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                count: 0
+            },
+        })
+
+    </script>
+</body>
+
+</html>
