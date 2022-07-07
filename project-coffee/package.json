@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "mint-ui": "^2.2.13",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "scss": "^0.2.4",
     "vue": "^2.5.2",
     "vue-resource": "^1.5.1",
